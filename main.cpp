@@ -11,5 +11,5 @@ int main()
 	client1.addProduct(merguez);
 	client1.addProduct(tel);
 	client1.updateAmount("Merguez", 3);
-	std::cout << client1 << std::endl;
+	std::cout << client1 << std::endl; //coucou
 }
