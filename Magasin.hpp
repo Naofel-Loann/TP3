@@ -16,6 +16,11 @@ public:
 	void display();
 	void searchProduct(std::string name);
 	void upadateAmount(std::string name, int amount);
+	void addClient(Client client);
+	void dispClient();
+	void searchClient(std::string name);
+	void addToCart(Client client, Product product);
+	void delInCart(Client client,Product product);
 private:
 	std::vector<Product> _products;
 	std::vector<Client> _clients;
