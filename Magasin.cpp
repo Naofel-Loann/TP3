@@ -85,13 +85,13 @@ void Magasin::addToCart(Client client, Product product)
     bool find=0;
     for(int i=0; i < _clients.size(); i++)
     {
-        if(_clients[i].getName()==client.getName() || std::to_string(_clients[i].getId())==client.getId())
+        if(_clients[i].getName()==client.getName() || _clients[i].getId()==client.getId())
         {
             std::cout << _clients[i] << std::endl;
             find=1;
         }
         if(find==0)
-            std::cout << "Ce client n'est pas dans notre magasin; yuhn,j"
+            std::cout << "Ce client n'est pas dans notre magasin";
     }
 }
 
