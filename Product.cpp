@@ -3,7 +3,15 @@
 
 Product::Product(){}
 Product::~Product(){}
-Product::Product(std::string title, std::string desc, int amount, float price): _title(title), _desc(desc), _amount(amount), _price(price) {}
+Product::Product(std::string title, std::string desc, int amount, float price): _title(title), _desc(desc), _amount(amount), _price(price)
+{
+    static int id=0;
+    _id = id++;
+}
+int Product::getID()
+{
+    return _id;
+}
 std::string Product::getTitle()
 {
     return _title;
@@ -27,6 +35,6 @@ void Product::setAmount(int amount)
 
 std::ostream &operator<<(std::ostream &flux,  Product& product)
 {
-    flux << "Titre: " << product.getTitle() << "\n Descirption: " << product.getDesc() << "\n Prix: " << product.getPrice() << "\n Quantite disponible: " <<  product.getAmount() << std::endl;
+    flux << " ID: " << product.getID() << "\n Titre: " << product.getTitle() << "\n Descirption: " << product.getDesc() << "\n Prix: " << product.getPrice() << "\n Quantite disponible: " <<  product.getAmount() << std::endl;
     return flux;
 }

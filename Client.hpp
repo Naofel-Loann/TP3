@@ -9,12 +9,12 @@ class Client
 public:
 	Client(std::string fristname, std::string name);
 	~Client();
-	int getId();
+	int getID();
 	std::string getFirstname();
 	std::string getName();
 	std::vector<Product> getCart();
 	std::string dispCart();
-	void addProduct(Product product);
+	void addProduct(Product& product);
 	void emptyCart();
 	void delProduct(std::string name);
 	void updateAmount(std::string name, int amount);

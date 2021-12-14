@@ -9,11 +9,13 @@ public:
 	Product(std::string title, std::string desc, int amount, float price);
 	std::string getTitle();
 	std::string getDesc();
+	int getID();
 	int getAmount();
 	float getPrice();
 	void setAmount(int amount);
 	~Product();
 private:
+	int _id;
 	std::string _title;
 	std::string _desc;
 	int _amount;

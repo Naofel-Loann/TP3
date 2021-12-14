@@ -12,18 +12,18 @@ class Magasin
 public:
 	Magasin();
 	~Magasin();
-	void addProduct(Product product);
+	void addProduct(Product& product);
 	void display();
 	void searchProduct(std::string name);
 	void upadateAmount(std::string name, int amount);
-	void addClient(Client client);
+	void addClient(Client *client);
 	void dispClient();
 	void searchClient(std::string name);
-	void addToCart(Client client, Product product);
+	void addToCart(Client &client, Product &product);
 	void delInCart(Client client,Product product);
 private:
-	std::vector<Product> _products;
-	std::vector<Client> _clients;
+	std::vector<Product*> _products;
+	std::vector<Client*> _clients;
 	std::vector<Order> _orders;
 };
 

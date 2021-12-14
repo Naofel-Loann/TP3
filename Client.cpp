@@ -9,7 +9,7 @@ Client::Client(std::string firstname, std::string name): _firstname(firstname), 
 
 Client::~Client(){}
 
-int Client::getId()
+int Client::getID()
 {
     return _id;
 }
@@ -27,7 +27,7 @@ std::vector<Product> Client::getCart()
     return _cart;
 }
 
-void Client::addProduct(Product product)
+void Client::addProduct(Product& product)
 {
     _cart.push_back(product);
     _amount.push_back(1);
@@ -79,7 +79,7 @@ std::string Client::dispCart()
     std::string result;
     for (int i = 0; i < _cart.size(); i++)
     {
-        ss << "\n" << _cart[i] << "Quantite voulue: " << _amount[i] << std::endl;
+        ss << "\n" << _cart[i] << " Quantite voulue: " << _amount[i] << std::endl;
         result = ss.str();
     }
     return result;
@@ -87,6 +87,6 @@ std::string Client::dispCart()
 
 std::ostream &operator<<(std::ostream &flux,  Client& client)
 {
-    flux << "ID: "<< client.getId() << "\nPrenom: " << client.getFirstname() << "\nNom: " <<  client.getName() << client.dispCart() << std::endl;
+    flux << "ID: "<< client.getID() << "\nPrenom: " << client.getFirstname() << "\nNom: " <<  client.getName() << client.dispCart() << std::endl;
     return flux;
 }
