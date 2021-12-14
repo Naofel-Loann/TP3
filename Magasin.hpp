@@ -20,7 +20,8 @@ public:
 	void dispClient();
 	void searchClient(std::string name);
 	void addToCart(Client &client, Product &product);
-	void delInCart(Client client,Product product);
+	void delInCart(Client &client,Product &product);
+	void modifyAmount(Client& client, Product& product, int amount);
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;

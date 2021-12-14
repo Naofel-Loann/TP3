@@ -17,5 +17,7 @@ int main()
 	store.addClient(&client1);
 	store.addClient(&client2);
 	store.addToCart(client2, fraise);
+	store.modifyAmount(client2, fraise, 5);
+	store.delInCart(client2, fraise);
 	std::cout << client2;
 }

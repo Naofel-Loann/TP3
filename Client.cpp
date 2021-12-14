@@ -38,7 +38,6 @@ void Client::emptyCart()
     _cart.clear();
     _amount.clear();
 }
-
 void Client::updateAmount(std::string name, int amount)
 {
     bool find=0;
@@ -63,6 +62,7 @@ void Client::delProduct(std::string name)
     {
         if(_cart[i].getTitle()==name)
         {
+            find=1;
             _cart.erase(_cart.begin() + i);
             _amount.erase(_amount.begin()+i);
         }
