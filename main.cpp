@@ -1,6 +1,7 @@
 #include <iostream>
 #include "magasin.hpp"
 #include "Client.hpp"
+#include "Order.hpp"
 int main()
 {
 	Magasin store;
@@ -11,13 +12,20 @@ int main()
 	Product merguez("Merguez", "Merguez pas cher", 20, 14);
 	Product tel("Telephone", "Iphone 14", 30, 150);
 
-	client1.addProduct(merguez);
-
 	store.addProduct(fraise);
+	store.addProduct(merguez);
+	store.addProduct(tel);
 	store.addClient(&client1);
 	store.addClient(&client2);
-	store.addToCart(client2, fraise);
-	store.modifyAmount(client2, fraise, 5);
-	store.delInCart(client2, fraise);
-	std::cout << client2;
+
+	store.addToCart(client2, tel);
+	store.addToCart(client1, merguez);
+	store.modifyAmount(client1, merguez, 5);
+	
+	Order orderC1(client1);
+	Order orderC2(client2);
+
+	store.validateOrder(orderC1);
+	//store.validateOrder(orderC2);
+	store.dispOrder();
 }

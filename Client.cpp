@@ -27,6 +27,11 @@ std::vector<Product> Client::getCart()
     return _cart;
 }
 
+std::vector<int> Client::getAmount()
+{
+    return _amount;
+}
+
 void Client::addProduct(Product& product)
 {
     _cart.push_back(product);
@@ -43,7 +48,7 @@ void Client::updateAmount(std::string name, int amount)
     bool find=0;
     for(int i=0; i < _cart.size(); i++)
     {
-        if(_cart[i].getTitle()==name)
+        if(_cart[i].getTitle()==name || std::to_string(_cart[i].getID())==name)
         {
             _amount[i] = amount;
             find=1;
@@ -52,7 +57,7 @@ void Client::updateAmount(std::string name, int amount)
     if (find==0)
     {
         std::cout << "Erreur: Aucun produit trouve a ce nom." << std::endl;
-    } 
+    }
 }
 
 void Client::delProduct(std::string name)
@@ -80,8 +85,8 @@ std::string Client::dispCart()
     for (int i = 0; i < _cart.size(); i++)
     {
         ss << "\n" << _cart[i] << " Quantite voulue: " << _amount[i] << std::endl;
-        result = ss.str();
     }
+    result = ss.str();
     return result;
 }
 

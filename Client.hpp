@@ -13,6 +13,7 @@ public:
 	std::string getFirstname();
 	std::string getName();
 	std::vector<Product> getCart();
+	std::vector<int> getAmount();
 	std::string dispCart();
 	void addProduct(Product& product);
 	void emptyCart();

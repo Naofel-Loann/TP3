@@ -87,13 +87,12 @@ void Magasin::addToCart(Client& client, Product& product)
     {
         if(_clients[i]->getID()==client.getID())
         {
-            findClient=1;
-            //std::cout << _clients[i]->getName() << _clients[i]->getFirstname() << std::endl;
+            findClient=true;
             for(int j=0; j < _products.size(); j++)
             {
                 if(_products[j]->getID()==product.getID())
                 {
-                    findProduct=1;
+                    findProduct=true;
                     _clients[i]->addProduct(product);
                     return;
                 }
@@ -152,13 +151,12 @@ void Magasin::modifyAmount(Client& client, Product& product, int amount)
         if(_clients[i]->getID()==client.getID())
         {
             findClient=1;
-            //std::cout << _clients[i]->getName() << _clients[i]->getFirstname() << std::endl;
             for(int j=0; j < _products.size(); j++)
             {
                 if(_products[j]->getID()==product.getID())
                 {
                     findProduct=1;
-                    _clients[i]->updateAmount(product.getTitle(), amount);
+                    _clients[i]->updateAmount(std::to_string(product.getID()), amount);
                     return;
                 }
             }
@@ -172,5 +170,24 @@ void Magasin::modifyAmount(Client& client, Product& product, int amount)
     if(findProduct==0)
     {
         std::cout << "Ce produit n'appartient pas au magasin" << std::endl;
+    }
+}
+
+void Magasin::validateOrder(Order& order)
+{
+    _orders.push_back(&order);
+    order.setStatus(1);
+}
+
+void setOrderStatus(Order& order, bool state)
+{
+    order.setStatus(state);
+}
+
+void Magasin::dispOrder()
+{
+    for (int i = 0; i < _orders.size(); i++)
+    {
+        std::cout << *_orders[i] << std::endl;
     }
 }

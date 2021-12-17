@@ -22,10 +22,13 @@ public:
 	void addToCart(Client &client, Product &product);
 	void delInCart(Client &client,Product &product);
 	void modifyAmount(Client& client, Product& product, int amount);
+	void validateOrder(Order& order);
+	void setOrderStatus(Order& order, bool state);
+	void dispOrder();
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;
-	std::vector<Order> _orders;
+	std::vector<Order*> _orders;
 };
 
 #endif
