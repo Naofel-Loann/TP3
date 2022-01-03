@@ -15,17 +15,22 @@ int main()
 	store.addProduct(fraise);
 	store.addProduct(merguez);
 	store.addProduct(tel);
+
 	store.addClient(&client1);
 	store.addClient(&client2);
 
 	store.addToCart(client2, tel);
+	store.addToCart(client2, fraise);
 	store.addToCart(client1, merguez);
+
 	store.modifyAmount(client1, merguez, 5);
 	
 	Order orderC1(client1);
 	Order orderC2(client2);
 
-	store.validateOrder(orderC1);
-	//store.validateOrder(orderC2);
+
+	//store.validateOrder(orderC1);
+	store.validateOrder(orderC2);
+	store.setOrderStatus(orderC1, 1);
 	store.dispOrder();
 }

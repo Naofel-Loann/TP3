@@ -46,5 +46,6 @@ void Order::setStatus(bool state)
 
 std::ostream &operator<<(std::ostream &flux,  Order& order)
 {
-    flux << "ID commande: "<< std::to_string(order.getID()) <<"\nClient: " << order.getClient().getFirstname() << " " << order.getClient().getName() << "\nProduits de la commande: " << order.dispProducts() << "Status de la commande: " << order.getStatus() << std::endl;
+    flux << "ID commande: " << std::to_string(order.getID()) <<"\nClient: " << order.getClient().getFirstname() << " " << order.getClient().getName() << "\nProduits de la commande: " << order.dispProducts() << " Status de la commande: " << order.getStatus() << std::endl;
+    return flux;
 }

@@ -35,6 +35,6 @@ void Product::setAmount(int amount)
 
 std::ostream &operator<<(std::ostream &flux,  Product& product)
 {
-    flux << " ID: " << product.getID() << "\n Titre: " << product.getTitle() << "\n Descirption: " << product.getDesc() << "\n Prix: " << product.getPrice() << "\n Quantite disponible: " <<  product.getAmount() << std::endl;
+    flux << " ID Produit: " << product.getID() << "\n Titre Produit: " << product.getTitle() << "\n Descirption Produit: " << product.getDesc() << "\n Prix Produit: " << product.getPrice() << "\n Quantite disponible: " <<  product.getAmount() << std::endl;
     return flux;
 }

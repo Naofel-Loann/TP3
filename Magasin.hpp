@@ -12,6 +12,9 @@ class Magasin
 public:
 	Magasin();
 	~Magasin();
+	std::vector<Product*> getProduct();
+	std::vector<Client*> getClient();
+	std::vector<Order*> getOrder();
 	void addProduct(Product& product);
 	void display();
 	void searchProduct(std::string name);

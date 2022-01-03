@@ -2,6 +2,11 @@
 
 Magasin::Magasin(){}
 Magasin::~Magasin(){}
+
+std::vector<Product*> Magasin::getProduct(){return _products;}
+std::vector<Client*> Magasin::getClient(){return _clients;}
+std::vector<Order*> Magasin::getOrder(){return _orders;}
+
 void Magasin::addProduct(Product& product)
 {
     _products.push_back(&product);
@@ -179,9 +184,14 @@ void Magasin::validateOrder(Order& order)
     order.setStatus(1);
 }
 
-void setOrderStatus(Order& order, bool state)
+void Magasin::setOrderStatus(Order& order, bool state)
 {
     order.setStatus(state);
+    if(state == 1)
+    {
+        _orders.push_back(&order);
+        order.setStatus(1);
+    }
 }
 
 void Magasin::dispOrder()
