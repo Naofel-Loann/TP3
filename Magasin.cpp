@@ -201,3 +201,14 @@ void Magasin::dispOrder()
         std::cout << *_orders[i] << std::endl;
     }
 }
+
+void Magasin::dispClientOrder(std::string name)
+{
+    for (int i = 0; i < _orders.size(); i++)
+    {
+        if(_orders[i]->getClient().getName() == name)
+        {
+            std::cout << *(_orders[i]);
+        }
+    }
+}

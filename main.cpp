@@ -32,5 +32,5 @@ int main()
 	//store.validateOrder(orderC1);
 	store.validateOrder(orderC2);
 	store.setOrderStatus(orderC1, 1);
-	store.dispOrder();
+	store.dispClientOrder("Le Thies");
 }

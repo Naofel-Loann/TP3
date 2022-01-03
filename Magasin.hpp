@@ -28,6 +28,7 @@ public:
 	void validateOrder(Order& order);
 	void setOrderStatus(Order& order, bool state);
 	void dispOrder();
+	void dispClientOrder(std::string name);
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;
