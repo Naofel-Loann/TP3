@@ -12,22 +12,22 @@ void Magasin::addProduct(Product& product)
     _products.push_back(&product);
 }
 
-void Magasin::display()
+void Magasin::dispProducts()
 {
     for(int i=0; i < _products.size(); i++)
     {
-        std::cout << _products[i];
+        std::cout << i << _products[i];
     }
 }
 
-void Magasin::searchProduct(std::string name)
+Product Magasin::searchProduct(std::string name)
 {
     bool find=0;
     for(int i=0; i < _products.size(); i++)
     {
         if(_products[i]->getTitle()==name)
         {
-            std::cout << _products[i];
+            return *_products[i];
             find=1;
         }
     }
@@ -180,8 +180,21 @@ void Magasin::modifyAmount(Client& client, Product& product, int amount)
 
 void Magasin::validateOrder(Order& order)
 {
-    _orders.push_back(&order);
-    order.setStatus(1);
+    for(int i = 0; i< order.getProduct().size(); i++)
+    {
+        for (int j = 0; j < _products.size(); j++)
+        {
+            if (order.getProduct()[i].getID() == _products[j]->getID())
+            {
+                if ( _products[j]->getAmount() >= order.getProduct()[i].getAmount())
+                {
+                    upadateAmount( _products[j]->getTitle(),  _products[j]->getAmount()-order.getClient()->getAmount()[0]);
+                    order.getClient()->emptyCart();
+                }
+            }
+            
+        }
+    }
 }
 
 void Magasin::setOrderStatus(Order& order, bool state)
@@ -196,6 +209,7 @@ void Magasin::setOrderStatus(Order& order, bool state)
 
 void Magasin::dispOrder()
 {
+    std::cout << "COMMANDES VALIDEES: " << std::endl;
     for (int i = 0; i < _orders.size(); i++)
     {
         std::cout << *_orders[i] << std::endl;
@@ -204,9 +218,10 @@ void Magasin::dispOrder()
 
 void Magasin::dispClientOrder(std::string name)
 {
+    std::cout << "COMMANDES VALIDEES DE : " << name << std::endl;
     for (int i = 0; i < _orders.size(); i++)
     {
-        if(_orders[i]->getClient().getName() == name)
+        if(_orders[i]->getClient()->getName() == name)
         {
             std::cout << *(_orders[i]);
         }

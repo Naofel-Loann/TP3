@@ -1,10 +1,10 @@
 #include "Order.hpp"
 
-Order::Order(Client &client): _client(client) 
+Order::Order(Client *client): _client(client) 
 {
-    _products = client.getCart();
+    _products = client->getCart();
     _status = false;
-    _amount = client.getAmount();
+    _amount = client->getAmount();
     static int id = 0;
     _id = id++;
 }
@@ -14,7 +14,7 @@ int Order::getID()
 {
     return _id;
 }
-Client Order::getClient()
+Client *Order::getClient()
 {
     return _client;
 }
@@ -46,6 +46,6 @@ void Order::setStatus(bool state)
 
 std::ostream &operator<<(std::ostream &flux,  Order& order)
 {
-    flux << "ID commande: " << std::to_string(order.getID()) <<"\nClient: " << order.getClient().getFirstname() << " " << order.getClient().getName() << "\nProduits de la commande: " << order.dispProducts() << " Status de la commande: " << order.getStatus() << std::endl;
+    flux << "ID commande: " << std::to_string(order.getID()) <<"\nClient: " << order.getClient()->getFirstname() << " " << order.getClient()->getName() << "\nProduits de la commande: " << order.dispProducts() << " Status de la commande: " << order.getStatus() << std::endl;
     return flux;
 }

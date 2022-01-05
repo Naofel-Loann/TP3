@@ -8,17 +8,17 @@
 class Order
 {
 public:
-	Order(Client &client);
+	Order(Client *client);
 	~Order();
 	int getID();
-	Client getClient();
+	Client *getClient();
 	std::vector<Product> getProduct();
 	bool getStatus();
 	std::string dispProducts();
 	void setStatus(bool state);
 private:
 	int _id;
-	Client _client;
+	Client *_client;
 	std::vector<Product> _products;
 	std::vector<int> _amount;
 	bool _status;

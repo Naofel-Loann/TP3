@@ -16,8 +16,8 @@ public:
 	std::vector<Client*> getClient();
 	std::vector<Order*> getOrder();
 	void addProduct(Product& product);
-	void display();
-	void searchProduct(std::string name);
+	void dispProducts();
+	Product searchProduct(std::string name);
 	void upadateAmount(std::string name, int amount);
 	void addClient(Client *client);
 	void dispClient();

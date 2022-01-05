@@ -92,6 +92,6 @@ std::string Client::dispCart()
 
 std::ostream &operator<<(std::ostream &flux,  Client& client)
 {
-    flux << "ID: "<< client.getID() << "\nPrenom: " << client.getFirstname() << "\nNom: " <<  client.getName() << client.dispCart() << std::endl;
+    flux << "Client ID: "<< client.getID() << "\nPrenom: " << client.getFirstname() << "\nNom: " <<  client.getName() << client.dispCart() << std::endl;
     return flux;
 }
