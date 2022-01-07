@@ -1,40 +1,59 @@
 #include "magasin.hpp"
 
 Magasin::Magasin(){}
-Magasin::~Magasin(){}
 
 std::vector<Product*> Magasin::getProduct(){return _products;}
 std::vector<Client*> Magasin::getClient(){return _clients;}
 std::vector<Order*> Magasin::getOrder(){return _orders;}
 
-void Magasin::addProduct(Product& product)
+void Magasin::addProduct(Product product)
 {
-    _products.push_back(&product);
+    Product *p = new Product(product);
+    _products.push_back(p);
 }
 
 void Magasin::dispProducts()
 {
     for(int i=0; i < _products.size(); i++)
     {
-        std::cout << i << _products[i];
+        std::cout << *(_products[i]) << "\n";
     }
 }
 
-Product Magasin::searchProduct(std::string name)
+Product *Magasin::searchProduct(std::string name)
 {
-    bool find=0;
     for(int i=0; i < _products.size(); i++)
-    {
         if(_products[i]->getTitle()==name)
-        {
-            return *_products[i];
-            find=1;
-        }
-    }
-    if (find==0)
-    {
-        std::cout << "Aucun produit trouve a ce nom " << std::endl;
-    }   
+            return _products[i];
+
+    std::cout << "Aucun produit trouve a ce nom " << std::endl;
+    return NULL;
+}
+
+Client *Magasin::searchClient(std::string name)
+{
+    for(int i=0; i < _clients.size(); i++)
+        if(_clients[i]->getName()==name || std::to_string(_clients[i]->getID())==name)
+           return _clients[i];
+
+    std::cout << "Erreur: Aucun client trouve a ce nom " << std::endl;
+    return 0;     
+}
+
+bool Magasin::productExist(std::string name)
+{
+    for(int i=0; i < _products.size(); i++)
+        if(_products[i]->getTitle()==name)
+            return true;
+    return false;
+}
+
+bool Magasin::clientExist(std::string name)
+{
+    for(int i=0; i < _clients.size(); i++)
+        if(_clients[i]->getName()==name || std::to_string(_clients[i]->getID())==name)
+           return true;
+    return false;
 }
 
 void Magasin::upadateAmount(std::string name, int amount)
@@ -54,9 +73,10 @@ void Magasin::upadateAmount(std::string name, int amount)
     }     
 }
 
-void Magasin::addClient(Client *client)
+void Magasin::addClient(Client client)
 {
-    _clients.push_back(client);
+    Client *c = new Client(client);
+    _clients.push_back(c);
 }
 
 void Magasin::dispClient()
@@ -65,23 +85,6 @@ void Magasin::dispClient()
     {
         std::cout << _clients[i]->getID() << "    "<< _clients[i]->getFirstname() << "    " << _clients[i]->getName() << std::endl; 
     }
-}
-
-void Magasin::searchClient(std::string name)
-{
-    bool find=0;
-    for(int i=0; i < _clients.size(); i++)
-    {
-        if(_clients[i]->getName()==name || std::to_string(_clients[i]->getID())==name)
-        {
-            std::cout << _clients[i] << std::endl;
-            find=1;
-        }
-    }
-    if (find==0)
-    {
-        std::cout << "Erreur: Aucun client trouve a ce nom " << std::endl;
-    }     
 }
 
 void Magasin::addToCart(Client& client, Product& product)
@@ -190,6 +193,11 @@ void Magasin::validateOrder(Order& order)
                 {
                     upadateAmount( _products[j]->getTitle(),  _products[j]->getAmount()-order.getClient()->getAmount()[0]);
                     order.getClient()->emptyCart();
+                    order.setStatus(1);
+                }
+                if ( _products[j]->getAmount() < order.getProduct()[i].getAmount())
+                {
+                    std::cout << "Vous dépassez la quantite en stock." << std::endl;
                 }
             }
             
@@ -226,4 +234,14 @@ void Magasin::dispClientOrder(std::string name)
             std::cout << *(_orders[i]);
         }
     }
+}
+
+Magasin::~Magasin()
+{
+    std::vector<Product*>::iterator it;
+    for(it = _products.begin(); it != _products.end(); it++)
+        delete(*it);
+    std::vector<Client*>::iterator it2;
+    for(it2 = _clients.begin(); it2 != _clients.end(); it2++)
+        delete(*it2);
 }

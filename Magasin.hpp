@@ -15,13 +15,13 @@ public:
 	std::vector<Product*> getProduct();
 	std::vector<Client*> getClient();
 	std::vector<Order*> getOrder();
-	void addProduct(Product& product);
+	void addProduct(Product product);
 	void dispProducts();
-	Product searchProduct(std::string name);
+	Product *searchProduct(std::string name);
 	void upadateAmount(std::string name, int amount);
-	void addClient(Client *client);
+	void addClient(Client client);
 	void dispClient();
-	void searchClient(std::string name);
+	Client *searchClient(std::string name);
 	void addToCart(Client &client, Product &product);
 	void delInCart(Client &client,Product &product);
 	void modifyAmount(Client& client, Product& product, int amount);
@@ -29,6 +29,8 @@ public:
 	void setOrderStatus(Order& order, bool state);
 	void dispOrder();
 	void dispClientOrder(std::string name);
+	bool clientExist(std::string name);
+	bool productExist(std::string name);
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;
