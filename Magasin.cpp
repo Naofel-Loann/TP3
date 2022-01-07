@@ -196,11 +196,8 @@ void Magasin::validateOrder(Order& order)
                     order.setStatus(1);
                 }
                 if ( _products[j]->getAmount() < order.getProduct()[i].getAmount())
-                {
                     std::cout << "Vous dépassez la quantite en stock." << std::endl;
-                }
             }
-            
         }
     }
 }
@@ -234,6 +231,21 @@ void Magasin::dispClientOrder(std::string name)
             std::cout << *(_orders[i]);
         }
     }
+}
+
+bool Magasin::searchInCart(Client client, std::string name)
+{
+    for(int i=0; i<client.getCart().size(); i++)
+        if(client.getCart()[i].getTitle()==name)
+            return true;
+    return false;
+}
+
+bool Magasin::checkAmount(std::string name, int amount)
+{  
+    if(searchProduct(name)->getAmount() >= amount)
+        return true;
+    return false;    
 }
 
 Magasin::~Magasin()

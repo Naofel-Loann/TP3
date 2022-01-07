@@ -31,6 +31,8 @@ public:
 	void dispClientOrder(std::string name);
 	bool clientExist(std::string name);
 	bool productExist(std::string name);
+	bool searchInCart(Client client, std::string name);
+	bool checkAmount(std::string name, int amount);
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;

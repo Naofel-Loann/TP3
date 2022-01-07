@@ -13,7 +13,7 @@ float setPrice();
 
 int main()
 {
-	/*Magasin store;
+	Magasin store;
 
 	Client client1("Loann", "Kamli");
 	Client client2("Younes", "Le Thies");
@@ -26,25 +26,24 @@ int main()
 	store.addProduct(merguez);
 	store.addProduct(tel);
 
-	store.addClient(&client1);
-	store.addClient(&client2);
+	store.addClient(client1);
+	store.addClient(client2);
 
 	store.addToCart(client2, tel);
 	store.addToCart(client2, fraise);
 	store.addToCart(client1, merguez);
 
-	std::cout << "Quantite merguez disponible : " << store.searchProduct("Merguez")->getAmount() << std::endl;
-	store.modifyAmount(client1, merguez, 5);
+	//std::cout << "Quantite merguez disponible : " << store.searchProduct("Merguez")->getAmount() << std::endl;
+	//store.modifyAmount(client1, merguez, 5);
 
-	Order orderC1(&client1);
-	Order orderC2(&client2);
+	//Order orderC1(&client1);
+	//Order orderC2(&client2);
 
-	store.validateOrder(orderC1);
+	//store.validateOrder(orderC1);
 
-	std::cout << client1 << "\n" << store.searchProduct("merguez")->getAmount();*/
+	//std::cout << client1 << "\n" << store.searchProduct("merguez")->getAmount();*/
 
 	//CREATION DU MENU
-	Magasin store;
 	while (1)
 	{	
 		int menu2=0;
@@ -148,7 +147,7 @@ int main()
 				std::cout << "	3  -	Afficher un client" << std::endl;
 				std::cout << "	4  -	Ajouter un produit au panier d'un client" << std::endl;
 				std::cout << "	5  -	Supprimer un produit du panier d'un client" << std::endl;
-				std::cout << "	6  -	Modifier la quantité d'un produit du panier d'un client" << std::endl;
+				std::cout << "	6  -	Modifier la quantite d'un produit du panier d'un client" << std::endl;
 				std::cout << "	7  -	Vider le panier d'un client" << std::endl;
 				std::cout << "	8  -	Retour au menu principal" << std::endl;
 					
@@ -208,25 +207,57 @@ int main()
 					{
 						std::string product_name, client_name;
 						std::cout << std::endl << "Dans le panier de quel client ? : " ;
-						std::getline(std::cin, client_name);
+						client_name = read_input();
 						if(!store.clientExist(client_name))
 						{
 							std::cout << "Aucun client n'a ete trouve au nom de " << client_name << std::endl;
 							break;
 						}
 						std::cout << "Quel produit voulez vous supprimer ? : ";
-						product_name = read_input();
-						/*if(!store.productExist(product_name))
+						std::getline(std::cin, product_name);
+						if(!store.searchInCart(*store.searchClient(client_name), product_name))
 						{
-							std::cout << "Aucun produit n'a ete trouve a ce nom: " << product_name << std::endl;
+							std::cout << "Ce produit n'est pas dans le panier du client." << std::endl;
 							break;
-						}*/
-						Client client = *store.searchClient(client_name);
-						Product product = *store.searchProduct(product_name);
-						store.addToCart(client, product);
-						std::cout << "Produit bien ajoute au panier ! " << std::endl;
+						}
+						store.delInCart(*store.searchClient(client_name), *store.searchProduct(product_name));
+						std::cout << "Produit supprime !" << std::endl;
 						break;
 					}
+					case 6:
+					{
+						std::string product_name, client_name;
+						int newQuantite;
+						std::cout << std::endl << "Dans le panier de quel client ? : " ;
+						client_name = read_input();
+						if(!store.clientExist(client_name))
+						{
+							std::cout << "Aucun client n'a ete trouve au nom de " << client_name << std::endl;
+							break;
+						}
+						std::cout << "Quel produit voulez vous modifier ? : ";
+						std::getline(std::cin, product_name);
+						if(!store.searchInCart(*store.searchClient(client_name), product_name))
+						{
+							std::cout << "Ce produit n'est pas dans le panier du client." << std::endl;
+							break;
+						}
+						std::cout << "Quelle est la nouvelle quantite ? : ";
+						std::cin >> newQuantite;
+						if(!store.checkAmount(product_name, newQuantite))
+						{
+							std::cout << "Impossible. Quantite superieur a celle disponible en stock" << std::endl;
+							break;
+						}
+						store.modifyAmount(*store.searchClient(client_name), *store.searchProduct(product_name), newQuantite);
+						std::cout << "Montant bien modifie ! " << std::endl;
+						break;
+					}
+					case 8:
+						menu2=1;
+						break;
+
+
 				}
 			}		
 		}
