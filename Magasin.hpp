@@ -25,8 +25,8 @@ public:
 	void addToCart(Client &client, Product &product);
 	void delInCart(Client &client,Product &product);
 	void modifyAmount(Client& client, Product& product, int amount);
-	void validateOrder(Order& order);
-	void setOrderStatus(Order& order, bool state);
+	void validateOrder(Order order);
+	void setOrderStatus(Order order, bool state);
 	void dispOrder();
 	void dispClientOrder(std::string name);
 	bool clientExist(std::string name);

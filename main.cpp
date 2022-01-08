@@ -5,6 +5,7 @@
 #include "Order.hpp"
 #include <ctype.h>
 
+void Clear();
 std::string read_input();
 int choiceMenu(int min, int max);
 int setQuantity();
@@ -13,6 +14,7 @@ float setPrice();
 
 int main()
 {
+	
 	Magasin store;
 
 	Client client1("Loann", "Kamli");
@@ -35,7 +37,7 @@ int main()
 
 	//std::cout << "Quantite merguez disponible : " << store.searchProduct("Merguez")->getAmount() << std::endl;
 	//store.modifyAmount(client1, merguez, 5);
-
+	
 	//Order orderC1(&client1);
 	//Order orderC2(&client2);
 
@@ -72,6 +74,7 @@ int main()
 				{
 					case 1:
 					{
+						Clear();
 						std::string title, desc;
 						int amount;
 						float price;
@@ -90,11 +93,13 @@ int main()
 						break;
 					}
 					case 2:
+						Clear();
 						store.dispProducts();
 						menu=1;
 						break;
 					case 3:
 					{
+						Clear();
 						std::string name;
 						std::cout << "Quel produit voulez vous afficher ?" << std::endl;
 						std::cin >> name;
@@ -107,6 +112,7 @@ int main()
 					}
 					case 4:
 					{
+						Clear();
 						std::string name;
 						int quantite;
 						std::cout << "De quel produit voulez vous modifier la quantite ?" << std::endl;
@@ -127,6 +133,7 @@ int main()
 					}
 					case 5:
 					{
+						Clear();
 						menu2=1;
 						break;
 					}
@@ -156,6 +163,7 @@ int main()
 				{
 					case 1:
 					{
+						Clear();
 						std::string firstname, name;
 						std::cout << "Entrez le prenom du client: ";
 						firstname = read_input();
@@ -167,10 +175,12 @@ int main()
 						break;
 					}
 					case 2:
+						Clear();
 						store.dispClient();
 						break;
 					case 3:
 					{
+						Clear();
 						std::string name;
 						std::cout << "Quel est le nom du client que vous voulez afficher ? : ";
 						name = read_input();
@@ -182,6 +192,7 @@ int main()
 					}
 					case 4:
 					{
+						Clear();
 						std::string product_name, client_name;
 						std::cout << "Quel produit voulez vous ajouter ? : ";
 						product_name = read_input();
@@ -205,6 +216,7 @@ int main()
 					}
 					case 5:
 					{
+						Clear();
 						std::string product_name, client_name;
 						std::cout << std::endl << "Dans le panier de quel client ? : " ;
 						client_name = read_input();
@@ -226,6 +238,7 @@ int main()
 					}
 					case 6:
 					{
+						Clear();
 						std::string product_name, client_name;
 						int newQuantite;
 						std::cout << std::endl << "Dans le panier de quel client ? : " ;
@@ -250,14 +263,27 @@ int main()
 							break;
 						}
 						store.modifyAmount(*store.searchClient(client_name), *store.searchProduct(product_name), newQuantite);
-						std::cout << "Montant bien modifie ! " << std::endl;
+						std::cout << "Quantite bien modifie ! " << std::endl;
+						break;
+					}
+					case 7:
+					{
+						Clear();
+						std::string client_name;
+						std::cout << std::endl << "Le panier de quel client ? : " ;
+						client_name = read_input();
+						if(!store.clientExist(client_name))
+						{
+							std::cout << "Aucun client n'a ete trouve au nom de " << client_name << std::endl;
+							break;
+						}
+						store.searchClient(client_name)->emptyCart();
+						std::cout << "Le panier a bien ete vide." << std::endl;
 						break;
 					}
 					case 8:
 						menu2=1;
 						break;
-
-
 				}
 			}		
 		}
@@ -265,22 +291,58 @@ int main()
 		if(menu == 3)
 		{
 			int choice2 = 0;
-			while (choice2 == 0)
+			while (menu2 == 0)
 			{
 				std::cout << "--------------------------------------------------------------" << std::endl;
 				std::cout << "		   Gestion des commandes" << std::endl;
 				std::cout << "--------------------------------------------------------------" << std::endl;
 				std::cout << "1  -	Valider une commande" << std::endl;
-				std::cout << "2  -	Mettre à jour le statut d'une commande" << std::endl;
-				std::cout << "3  -	Afficher toutes les commandes validees" << std::endl;
-				std::cout << "4  -	Afficher toutes les commandes d'un client" << std::endl;
-				std::cout << "5  -	Retour au menu principal" << std::endl;
+				std::cout << "2  -	Afficher toutes les commandes validees" << std::endl;
+				std::cout << "3  -	Afficher toutes les commandes d'un client" << std::endl;
+				std::cout << "4  -	Retour au menu principal" << std::endl;
 					
-				std::cin >> choice2;
-				if(choice2 < 1 || choice2 > 5)
+				choice2 = choiceMenu(1, 8);
+				switch (choice2)
 				{
-					std::cout << "Le choix n'est pas valide. Recommencez." << std::endl;
-					choice2 = 0;
+					case 1:
+					{
+						Clear();
+						std::string client_name;
+						std::cout << "Le panier de quel client voulez vous valider ?" << std::endl;
+						client_name = read_input();
+						if(!store.clientExist(client_name))
+						{
+							std::cout << "Aucun client n'a ete trouve au nom de " << client_name << std::endl;
+							break;
+						}
+						Order order(store.searchClient(client_name));
+						store.validateOrder(order);
+						break;
+					}
+					case 2:
+					{
+						Clear();
+						store.dispOrder();
+						break;
+					}
+					case 3:
+					{
+						Clear();
+						std::string client_name;
+						std::cout << "Les commandes de quel client voulez vous afficher ?" << std::endl;
+						client_name = read_input();
+						if(!store.clientExist(client_name))
+						{
+							std::cout << "Aucun client n'a ete trouve au nom de " << client_name << std::endl;
+							break;
+						}
+						store.dispClientOrder(client_name);
+						break;
+					}
+					case 4:
+						Clear();
+						menu2=1;
+						break;
 				}
 			}		
 		}
@@ -349,6 +411,7 @@ float setPrice()
 
 int principalMenu()
 {
+	Clear();
 	std::cout << "--------------------------------------------------------------" << std::endl;
 	std::cout << "		   Choisissez une option" << std::endl;
 	std::cout << "--------------------------------------------------------------" << std::endl;
@@ -358,4 +421,17 @@ int principalMenu()
 	std::cout << "4  -	Fermer le magasin" << std::endl;
 	int menu = choiceMenu(1, 4);
 	return menu;
+}
+
+void Clear()
+{
+#if defined _WIN32
+    system("cls");
+    //clrscr(); // including header file : conio.h
+#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+    system("clear");
+    //std::cout<< u8"\033[2J\033[1;1H"; //Using ANSI Escape Sequences 
+#elif defined (__APPLE__)
+    system("clear");
+#endif
 }

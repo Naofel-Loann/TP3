@@ -13,6 +13,7 @@ public:
 	int getID();
 	Client *getClient();
 	std::vector<Product> getProduct();
+	std::vector<int> getAmount();
 	bool getStatus();
 	std::string dispProducts();
 	void setStatus(bool state);

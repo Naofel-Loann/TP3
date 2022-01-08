@@ -181,34 +181,35 @@ void Magasin::modifyAmount(Client& client, Product& product, int amount)
     }
 }
 
-void Magasin::validateOrder(Order& order)
+void Magasin::validateOrder(Order order)
 {
+    if(order.getProduct().size()==0)
+    {
+        std::cout << "Le panier de ce client est vide." << std::endl;
+        return;
+    }
     for(int i = 0; i< order.getProduct().size(); i++)
     {
-        for (int j = 0; j < _products.size(); j++)
+        if(order.getAmount()[i] > searchProduct(order.getProduct()[i].getTitle())->getAmount())
         {
-            if (order.getProduct()[i].getID() == _products[j]->getID())
-            {
-                if ( _products[j]->getAmount() >= order.getProduct()[i].getAmount())
-                {
-                    upadateAmount( _products[j]->getTitle(),  _products[j]->getAmount()-order.getClient()->getAmount()[0]);
-                    order.getClient()->emptyCart();
-                    order.setStatus(1);
-                }
-                if ( _products[j]->getAmount() < order.getProduct()[i].getAmount())
-                    std::cout << "Vous dépassez la quantite en stock." << std::endl;
-            }
+            std::cout << "Quantite voulue trop importante par rapport au stock du magasin." << std::endl;
+            return;
         }
+        upadateAmount( order.getProduct()[i].getTitle(), searchProduct(order.getProduct()[i].getTitle())->getAmount()-order.getAmount()[i]);
     }
+    order.getClient()->emptyCart();
+    setOrderStatus(order, 1);
 }
 
-void Magasin::setOrderStatus(Order& order, bool state)
+void Magasin::setOrderStatus(Order order, bool state)
 {
     order.setStatus(state);
     if(state == 1)
     {
-        _orders.push_back(&order);
+        Order *o = new Order(order);
+        _orders.push_back(o);
         order.setStatus(1);
+        std::cout << "La commande a bien ete validee !" << std::endl;
     }
 }
 
@@ -216,21 +217,15 @@ void Magasin::dispOrder()
 {
     std::cout << "COMMANDES VALIDEES: " << std::endl;
     for (int i = 0; i < _orders.size(); i++)
-    {
         std::cout << *_orders[i] << std::endl;
-    }
 }
 
 void Magasin::dispClientOrder(std::string name)
 {
     std::cout << "COMMANDES VALIDEES DE : " << name << std::endl;
     for (int i = 0; i < _orders.size(); i++)
-    {
         if(_orders[i]->getClient()->getName() == name)
-        {
-            std::cout << *(_orders[i]);
-        }
-    }
+            std::cout << *(_orders[i]) << std::endl;
 }
 
 bool Magasin::searchInCart(Client client, std::string name)
