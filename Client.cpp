@@ -83,9 +83,8 @@ std::string Client::dispCart()
     std::stringstream ss;
     std::string result;
     for (int i = 0; i < _cart.size(); i++)
-    {
         ss << "\n" << _cart[i] << " Quantite voulue: " << _amount[i] << std::endl;
-    }
+
     result = ss.str();
     return result;
 }

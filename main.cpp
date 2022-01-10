@@ -1,9 +1,13 @@
 #include <iostream>
 #include <string>
-#include "magasin.hpp"
+#include <ctype.h>
+#include <fstream>
+#include <set>
+#include <cerrno>
+#include "Magasin.hpp"
 #include "Client.hpp"
 #include "Order.hpp"
-#include <ctype.h>
+
 
 void Clear();
 std::string read_input();
@@ -11,12 +15,13 @@ int choiceMenu(int min, int max);
 int setQuantity();
 int principalMenu();
 float setPrice();
+void save(Magasin &store);
 
 int main()
 {
+	Magasin store;	
+	//CODE A DECOMMENTER POUR LES TEST
 	
-	Magasin store;
-
 	Client client1("Loann", "Kamli");
 	Client client2("Younes", "Le Thies");
 
@@ -35,16 +40,7 @@ int main()
 	store.addToCart(client2, fraise);
 	store.addToCart(client1, merguez);
 
-	//std::cout << "Quantite merguez disponible : " << store.searchProduct("Merguez")->getAmount() << std::endl;
-	//store.modifyAmount(client1, merguez, 5);
-	
-	//Order orderC1(&client1);
-	//Order orderC2(&client2);
-
-	//store.validateOrder(orderC1);
-
-	//std::cout << client1 << "\n" << store.searchProduct("merguez")->getAmount();*/
-
+	save(store);
 	//CREATION DU MENU
 	while (1)
 	{	
@@ -351,8 +347,7 @@ int main()
 			break;
 		}
 		
-	}
-	
+	}	
 }
 
 std::string read_input()
@@ -434,4 +429,50 @@ void Clear()
 #elif defined (__APPLE__)
     system("clear");
 #endif
+}
+
+void save(Magasin &store)
+{
+	char delim = ';';
+
+	//Sauvegarde des produits
+	const char* path = "save/products.csv";
+	std::ofstream productsFile{ path, std::ios::trunc };
+	for (int i = 0; i < store.getProduct().size(); i++)
+	{
+		std::string title = store.getProduct()[i]->getTitle();
+		std::string desc = store.getProduct()[i]->getDesc();
+		float price = store.getProduct()[i]->getPrice();
+		int stock = store.getProduct()[i]->getAmount();
+		productsFile << title << delim << desc << delim << price << delim << stock << std::endl;
+	}
+	productsFile.close();
+
+	//Sauvegarde des clients
+	path = "save/clients.csv";
+	std::ofstream clientsFile{ path, std::ios::trunc };
+	for (int i = 0; i < store.getClient().size(); i++)
+	{
+		int id = store.getClient()[i]->getID();
+		std::string name = store.getClient()[i]->getName();
+		std::string firstname = store.getClient()[i]->getFirstname();
+		std::vector<std::string> productName;
+		std::vector<int> quantity;
+		for(int j =0 ; j< store.getClient()[i]->getCart().size(); j++)
+		{
+			productName[j] =  store.getClient()[i]->getCart()[j].getTitle();
+			quantity[j] =  store.getClient()[i]->getCart()[j].getAmount();
+		}
+		
+		clientsFile << id << delim << firstname << delim << name << delim;
+		if(productName.size() != 0)
+		{
+			for(int j = 0; j< productName.size()-1 ; j++)
+				clientsFile << productName[i] << ',';
+			clientsFile << productName[productName.size()-1];
+		}
+
+	}
+	clientsFile.close();
+	
 }

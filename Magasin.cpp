@@ -1,4 +1,4 @@
-#include "magasin.hpp"
+#include "Magasin.hpp"
 
 Magasin::Magasin(){}
 
