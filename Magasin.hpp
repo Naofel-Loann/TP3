@@ -33,6 +33,9 @@ public:
 	bool productExist(std::string name);
 	bool searchInCart(Client client, std::string name);
 	bool checkAmount(std::string name, int amount);
+	void setProducts(std::vector<Product*> vec);
+	void setOrders(std::vector<Order*> vec);
+	void setClients(std::vector<Client*> vec);
 private:
 	std::vector<Product*> _products;
 	std::vector<Client*> _clients;

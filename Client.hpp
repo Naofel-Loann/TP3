@@ -4,6 +4,7 @@
 #include <sstream>
 #include "Product.hpp"
 
+
 class Client
 {
 public:
@@ -19,6 +20,8 @@ public:
 	void emptyCart();
 	void delProduct(std::string name);
 	void updateAmount(std::string name, int amount);
+	void addCart(std::vector<Product> vec);
+	void addQuantity(std::vector<int> vec);
 private:
 	int _id;
 	std::string _firstname;

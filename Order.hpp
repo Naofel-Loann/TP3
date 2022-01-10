@@ -17,6 +17,10 @@ public:
 	bool getStatus();
 	std::string dispProducts();
 	void setStatus(bool state);
+	void setCart(std::vector<Product> vec);
+	void setQuantity(std::vector<int> vec);
+
+
 private:
 	int _id;
 	Client *_client;

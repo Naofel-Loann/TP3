@@ -2,11 +2,11 @@
 
 Order::Order(Client *client): _client(client) 
 {
+    static int id = 0;
+    _id = id++;
     _products = client->getCart();
     _status = false;
     _amount = client->getAmount();
-    static int id = 0;
-    _id = id++;
 }
 Order::~Order(){}
 
@@ -52,4 +52,14 @@ std::ostream &operator<<(std::ostream &flux,  Order& order)
 {
     flux << "ID commande: " << std::to_string(order.getID()) <<"\nClient: " << order.getClient()->getFirstname() << " " << order.getClient()->getName() << "\nProduits de la commande: " << order.dispProducts() << "Status de la commande: " << order.getStatus() << std::endl;
     return flux;
+}
+
+void Order::setCart(std::vector<Product> vec)
+{
+    _products = vec;
+}
+
+void Order::setQuantity(std::vector<int> vec)
+{
+    _amount = vec;
 }

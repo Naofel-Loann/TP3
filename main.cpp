@@ -16,13 +16,15 @@ int setQuantity();
 int principalMenu();
 float setPrice();
 void save(Magasin &store);
+void restore(Magasin &store);
 
 int main()
 {
-	Magasin store;	
+	Magasin store;
+	restore(store);	
 	//CODE A DECOMMENTER POUR LES TEST
 	
-	Client client1("Loann", "Kamli");
+	/*Client client1("Loann", "Kamli");
 	Client client2("Younes", "Le Thies");
 
 	Product fraise("Fraise", "fraise pas cher", 10, 2.99);
@@ -38,9 +40,17 @@ int main()
 
 	store.addToCart(client2, tel);
 	store.addToCart(client2, fraise);
+	store.addToCart(client2, merguez);
 	store.addToCart(client1, merguez);
+	store.modifyAmount(client2, fraise, 8);
+	store.modifyAmount(client2, merguez, 4);
+	store.modifyAmount(client1, merguez, 5);
 
-	save(store);
+	Order ordertest(&client1);
+	store.validateOrder(store.searchClient(client1.getName()));
+	Order ordertest2(&client2);
+	store.validateOrder(store.searchClient(client2.getName()));*/
+
 	//CREATION DU MENU
 	while (1)
 	{	
@@ -59,11 +69,6 @@ int main()
 				std::cout << "	3  -	Afficher un produit" << std::endl;
 				std::cout << "	4  -	Mettre a jour la quantite d'un produit dans le magasin" << std::endl;
 				std::cout << "	5  -	Retour au menu principal" << std::endl;
-
-				/*Client client2("Younes", "Le Thies");
-				Product fraise("Fraise", "fraise pas cher", 10, 2.99);
-				store.addClient(&client2);
-				store.addProduct(fraise);*/
 
 				choice2 = choiceMenu(1, 5);
 				switch (choice2)
@@ -348,6 +353,7 @@ int main()
 		}
 		
 	}	
+	save(store);
 }
 
 std::string read_input()
@@ -433,7 +439,7 @@ void Clear()
 
 void save(Magasin &store)
 {
-	char delim = ';';
+	char delim = ',';
 
 	//Sauvegarde des produits
 	const char* path = "save/products.csv";
@@ -453,26 +459,202 @@ void save(Magasin &store)
 	std::ofstream clientsFile{ path, std::ios::trunc };
 	for (int i = 0; i < store.getClient().size(); i++)
 	{
-		int id = store.getClient()[i]->getID();
-		std::string name = store.getClient()[i]->getName();
-		std::string firstname = store.getClient()[i]->getFirstname();
+		Client *client = store.getClient()[i];
+		int id = client->getID();
+		std::string name = client->getName();
+		std::string firstname = client->getFirstname();
 		std::vector<std::string> productName;
-		std::vector<int> quantity;
-		for(int j =0 ; j< store.getClient()[i]->getCart().size(); j++)
-		{
-			productName[j] =  store.getClient()[i]->getCart()[j].getTitle();
-			quantity[j] =  store.getClient()[i]->getCart()[j].getAmount();
-		}
-		
-		clientsFile << id << delim << firstname << delim << name << delim;
+		std::vector<int> quantity = client->getAmount();
+		for(int j =0 ; j< client->getCart().size(); j++)
+			productName.push_back(client->getCart()[j].getTitle());
+
+		clientsFile << firstname << delim << name << delim;
 		if(productName.size() != 0)
 		{
-			for(int j = 0; j< productName.size()-1 ; j++)
-				clientsFile << productName[i] << ',';
-			clientsFile << productName[productName.size()-1];
+			for(int j = 0; j< client->getCart().size()-1 ; j++)
+				clientsFile << productName[j] << ';';
+			clientsFile << productName[productName.size()-1] << delim ;
 		}
-
+		else
+			clientsFile << '0' << delim << '0';
+		if(quantity.size() != 0)
+		{
+			for(int j = 0; j< quantity.size()-1 ; j++)
+				clientsFile << quantity[j] << ';';
+			clientsFile << quantity[quantity.size()-1];
+		}
+		clientsFile << std::endl;
 	}
 	clientsFile.close();
-	
+
+
+	//Sauvegarde des commandes
+	path = "save/orders.csv";
+	std::ofstream ordersFile{ path, std::ios::trunc };
+	for (int i = 0; i < store.getOrder().size(); i++)
+	{
+		Order *order = store.getOrder()[i];
+		int id = order->getID();
+		std::string clientName = order->getClient()->getName();
+		std::vector<std::string> productsName;
+		std::vector<int> productQuantity = order->getAmount();
+		bool status = order->getStatus();
+		for(int j=0; j< order->getProduct().size(); j++)
+			productsName.push_back(order->getProduct()[j].getTitle());
+		
+		ordersFile << clientName << delim;
+
+		if(productsName.size() != 0)
+		{
+			for(int j=0; j< productsName.size()-1; j++)
+				ordersFile << productsName[j] << ';';
+			ordersFile << productsName[productsName.size()-1] << delim;
+		}
+		if(productQuantity.size() != 0)
+		{
+			for(int j=0; j< productQuantity.size()-1; j++)
+				ordersFile << productQuantity[j] << ';';
+			ordersFile << productQuantity[productQuantity.size()-1] << delim;
+		}
+		ordersFile << status << std::endl;
+	}
+	ordersFile.close();
+}
+
+
+void restore(Magasin &store)
+{
+	/////////////////////CHARGEMENT DES PRODUITS//////////////////////////////////
+	std::string fname = "save/products.csv";
+	std::vector<std::vector<std::string>> productsContent;
+	std::vector<std::string> row;
+	std::string line, word;
+	std::vector<Product*> productsList;
+	std::string title, desc;
+	float price;
+	int stock;
+
+	std::fstream file (fname, std::ios::in);
+	if(file.is_open())
+	{
+		while(std::getline(file, line))
+		{
+			row.clear();
+			std::stringstream str(line);
+			while(getline(str, word, ','))
+				row.push_back(word);
+			productsContent.push_back(row);
+		}
+	}
+	else
+	{
+		return;
+	}
+	for(int i=0;i<productsContent.size();i++) //Pour chaque ligne
+	{
+		title = productsContent[i][0];
+		desc = productsContent[i][1];
+		price = std::stof(productsContent[i][2]);
+		stock = std::stoi(productsContent[i][3]);
+		Product product(title, desc, stock, price);
+		Product *p = new Product(product);
+		productsList.push_back(p);
+	}
+	store.setProducts(productsList);
+	/////////////////////CHARGEMENT DES CLIENTS//////////////////////////////////
+	fname = "save/clients.csv";
+	std::vector<std::vector<std::string>> clientsContent;
+	row.erase( row.begin(), row.end() );;
+	std::vector<Client*> clientsList;
+	std::string firstname, name;
+
+	std::fstream clientfile (fname, std::ios::in);
+	if(clientfile.is_open())
+	{
+		while(std::getline(clientfile, line))
+		{
+			row.clear();
+			std::stringstream str(line);
+			while(getline(str, word, ','))
+				row.push_back(word);
+			clientsContent.push_back(row);
+		}
+	}
+	else
+	{
+		std::cout<<"Impossible d'ouvrir la sauvegarde des clients." << std::endl;
+		return;
+	}
+
+ 
+	for(int i=0;i<clientsContent.size();i++) //Pour chaque ligne
+	{
+		std::vector<Product> clientProduct; //vecteur qui stock les produits dans le panier du client
+		std::vector<int> clientQuantity; //vecteur qui stock les quantités des produits dans le panier du client
+		firstname = clientsContent[i][0]; 
+		name = clientsContent[i][1];
+		
+		std::stringstream str(clientsContent[i][2]); 
+		while(getline(str, word, ';')) //stockage des produits dans un vecteur
+			clientProduct.push_back(*store.searchProduct(word)); //ajout des produits dans un vecteur
+
+		std::stringstream str2(clientsContent[i][3]); 
+		while(getline(str2, word, ';')) //stockage des quantités des produits dans un vecteur
+			clientQuantity.push_back(std::stoi(word)); //ajout des quantités dans un vecteur
+		
+		Client client(firstname, name);
+		client.addCart(clientProduct);
+		client.addQuantity(clientQuantity);
+		Client *c = new Client(client);
+		clientsList.push_back(c);
+	}
+	store.setClients(clientsList);
+
+/////////////////////CHARGEMENT DES COMMANDES//////////////////////////////////
+	fname = "save/orders.csv";
+	std::vector<std::vector<std::string>> ordersContent;
+	row.erase( row.begin(), row.end() );;
+	std::vector<Order*> ordersList;
+
+	std::fstream ordersFile (fname, std::ios::in);
+	if(ordersFile.is_open())
+	{
+		while(std::getline(ordersFile, line))
+		{
+			row.clear();
+			std::stringstream str(line);
+			while(getline(str, word, ','))
+				row.push_back(word);
+			ordersContent.push_back(row);
+		}
+	}
+	else
+	{
+		return;
+	}
+	for(int i=0;i<ordersContent.size();i++) //Pour chaque ligne
+	{
+		std::vector<Product> ordersProduct; //vecteur qui stock les produits de la commande
+		std::vector<int> ordersQuantity; //vecteur qui stock les quantités des produits  de la commande 
+		
+		name = ordersContent[i][0];
+
+		std::stringstream str(ordersContent[i][1]); 
+		while(getline(str, word, ';')) //stockage des produits dans un vecteur
+			ordersProduct.push_back(*store.searchProduct(word)); //ajout des produits dans un vecteur
+
+		std::stringstream str2(ordersContent[i][2]); 
+		while(getline(str2, word, ';')) //stockage des quantités des produits dans un vecteur
+			ordersQuantity.push_back(std::stoi(word)); //ajout des quantités dans un vecteur
+		
+		bool status = (ordersContent[i][3] == "1");
+
+		Order order(store.searchClient(name));
+		order.setCart(ordersProduct);
+		order.setQuantity(ordersQuantity);
+		order.setStatus(status);
+		Order *o = new Order(order);
+		ordersList.push_back(o);
+	}
+	store.setOrders(ordersList);
 }

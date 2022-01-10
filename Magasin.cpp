@@ -252,3 +252,16 @@ Magasin::~Magasin()
     for(it2 = _clients.begin(); it2 != _clients.end(); it2++)
         delete(*it2);
 }
+
+void Magasin::setProducts(std::vector<Product*> vec)
+{
+    _products = vec;
+}
+void Magasin::setOrders(std::vector<Order*> vec)
+{
+    _orders = vec;
+}
+void Magasin::setClients(std::vector<Client*> vec)
+{
+    _clients = vec;
+}

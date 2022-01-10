@@ -94,3 +94,18 @@ std::ostream &operator<<(std::ostream &flux,  Client& client)
     flux << "Client ID: "<< client.getID() << "\nPrenom: " << client.getFirstname() << "\nNom: " <<  client.getName() << client.dispCart() << std::endl;
     return flux;
 }
+
+void Client::addCart(std::vector<Product> vec)
+{
+    for(int i=0; i< vec.size() ; i++)
+    {
+        _cart.push_back(vec[i]);
+    }
+}
+void Client::addQuantity(std::vector<int> vec)
+{
+    for(int i=0; i< vec.size() ; i++)
+    {
+        _amount.push_back(vec[i]);
+    }
+}
